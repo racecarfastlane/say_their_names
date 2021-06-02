@@ -1,0 +1,13 @@
+library(shiny)
+library(ggplot2)
+library(plotly)
+library(extrafont)
+require(scales)
+library(colorspace)
+library(ggiraph)
+library(RColorBrewer)
+
+victims <- read.csv("data/victims.csv")
+mpv_db_pk <- read.csv("data/mpv_db_pk.csv")
+mpv_db_pkstate <- read.csv("data/mpv_db_pkstate.csv")
+mpv_db_pkpd <- read.csv("data/mpv_db_pkpd.csv")
