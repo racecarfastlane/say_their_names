@@ -1,0 +1,118 @@
+---
+title: "potential code"
+output: html_notebook
+---
+
+addProviderTiles("CartoDB.Positron", options = providerTileOptions(noWrap = TRUE)) %>%
+            addCircleMarkers(
+                lng=~longitude, # Longitude coordinates
+                lat=~latitude, # Latitude coordinates
+                radius=~TOT, # Total count
+                stroke=FALSE, # Circle stroke
+                fillOpacity=0.5, # Circle Fill Opacity
+                # Popup content
+                popup=~paste(
+                    "<b>", CR, "</b><br/>",
+                    "count: ", as.character(TOT), "<br/>",
+                    "date: ", as.character(MO), "/", as.character(YR)
+
+```{r}
+
+library(shiny)
+library(ggplot2)
+library(plotly)
+library(extrafont)
+require(scales)
+library(colorspace)
+library(ggiraph)
+library(RColorBrewer)
+library(leaflet)
+library(dplyr)
+
+victims <- read.csv("data/victims.csv")
+victims_geo <- read.csv("data/victims_geo.csv")
+victims_article_freq <- read.csv("data/victims_article_freq.csv")
+victims_demo <- read.csv("data/mpv_db_pk.csv")
+victims_geo_new <- read.csv("data/victims_geo_new.csv")
+
+victims_geo_new <- victims_geo_new %>%
+  mutate(datePublished = as.Date(datePublished))%>%
+  mutate(doi = Date.of.Incident..month.day.year.)%>%
+  mutate(doi = as.Date(doi))
+
+head(victims_geo_new)
+  
+
+
+```
+
+
+
+```{r}
+
+
+#victims_geo_new <- 
+  
+  victims_geo_new %>% 
+    select(victim,source,url,description,datePublished,doi,victim_age) %>%
+    group_by(victim,doi,victim_age) %>%
+    mutate(weight = datePublished - doi + 1)
+
+
+```
+
+
+
+```{r}
+head(victims_geo_new)
+
+write.csv(victims_geo_new,"data\\victims_article_merge.csv", row.names = FALSE)
+
+head(victims_article_freq)
+
+```
+```{r}
+victims_sq <- victims_article_freq %>%
+  group_by(victim,doi,freq) %>%
+  summarize(weight_sum = sum(weight)) %>%
+  select (victim,freq,weight_sum) %>%
+  ungroup() %>%
+  mutate(sq = weight_sum * freq)
+
+victims_sq
+  
+```
+
+
+
+```{r}
+
+victims_sq <- inner_join(victims_sq, victims_geo, by = 'victim', copy = FALSE)
+
+head(victims_sq)
+
+victims_sq_demo <- victims_sq %>%
+  select(victim,sq,victim_age,victim_race,victim_gender,URL.of.image.of.victim,
+         doi,Agency.responsible.for.death,Cause.of.death,
+         A.brief.description.of.the.circumstances.surrounding.the.death,
+         Official.disposition.of.death..justified.or.other.,Criminal.Charges.,
+         Symptoms.of.mental.illness.,Armed.Unarmed.Status,
+         Alleged.Weapon..Source..WaPo.and.Review.of.Cases.Not.Included.in.WaPo.Database.,
+         Alleged.Threat.Level..Source..WaPo.,Fleeing..Source..WaPo.,Body.Camera..Source..WaPo.,
+         Zip,City_y,State_y,Latitude,Longitude)%>%
+  unique()
+
+head(victims_sq_demo)
+
+write.csv(victims_sq_demo,"data\\victims_sq_demo.csv", row.names = FALSE)
+
+
+
+```
+
+```{r}
+
+
+
+```
+
