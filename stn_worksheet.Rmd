@@ -51,12 +51,12 @@ head(victims_geo_new)
 ```{r}
 
 
-#victims_geo_new <- 
-  
-  victims_geo_new %>% 
+victims_geo_new <- victims_geo_new %>% 
     select(victim,source,url,description,datePublished,doi,victim_age) %>%
     group_by(victim,doi,victim_age) %>%
     mutate(weight = datePublished - doi + 1)
+
+
 
 
 ```
@@ -106,7 +106,7 @@ head(victims_sq_demo)
 
 write.csv(victims_sq_demo,"data\\victims_sq_demo.csv", row.names = FALSE)
 
-
+write.csv(victims_sq_demo_unique,"data/victims_sq_demo_unique.csv", row.names = FALSE)
 
 ```
 

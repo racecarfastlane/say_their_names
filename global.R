@@ -19,7 +19,8 @@ victims_sq_demo <- victims_sq_demo %>%
   mutate(sq = as.integer(sq))
 
 victims_sq_demo_unique <- victims_sq_demo %>%
-  select(victim,doi,victim_race,victim_gender,victim_age,Armed.Unarmed.Status,sq)%>%
+  select(victim,doi,victim_race,victim_gender,victim_age,Armed.Unarmed.Status,sq,Latitude,Longitude
+         ,URL.of.image.of.victim)%>%
   unique()
 
 
