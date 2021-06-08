@@ -29,9 +29,7 @@ library(RColorBrewer)
 library(leaflet)
 library(dplyr)
 
-victims <- read.csv("data/victims.csv")
-victims_geo <- read.csv("data/victims_geo.csv")
-victims_article_freq <- read.csv("data/victims_article_freq.csv")
+
 victims_demo <- read.csv("data/mpv_db_pk.csv")
 victims_geo_new <- read.csv("data/victims_geo_new.csv")
 
@@ -51,7 +49,7 @@ head(victims_geo_new)
 ```{r}
 
 
-victims_geo_new <- victims_geo_new %>% 
+victims_article_merge <- victims_geo_new %>% 
     select(victim,source,url,description,datePublished,doi,victim_age) %>%
     group_by(victim,doi,victim_age) %>%
     mutate(weight = datePublished - doi + 1)
@@ -64,18 +62,30 @@ victims_geo_new <- victims_geo_new %>%
 
 
 ```{r}
-head(victims_geo_new)
+head(victims_article_merge)
 
-write.csv(victims_geo_new,"data\\victims_article_merge.csv", row.names = FALSE)
+write.csv(victims_article_merge,"data\\victims_article_merge.csv", row.names = FALSE)
 
-head(victims_article_freq)
+#Run adding_article_frequency notebook
 
 ```
+
+```{r}
+
+victims_article_freq <- read.csv("data/victims_article_freq.csv")
+
+```
+
+
+
+
+
+
 ```{r}
 victims_sq <- victims_article_freq %>%
   group_by(victim,doi,freq) %>%
   summarize(weight_sum = sum(weight)) %>%
-  select (victim,freq,weight_sum) %>%
+  select (victim,freq,weight_sum,doi) %>%
   ungroup() %>%
   mutate(sq = weight_sum * freq)
 
@@ -87,26 +97,24 @@ victims_sq
 
 ```{r}
 
-victims_sq <- inner_join(victims_sq, victims_geo, by = 'victim', copy = FALSE)
+victims_sq_join <- inner_join(victims_sq, victims_geo_new, by = 'victim', copy = FALSE)
 
-head(victims_sq)
+head(victims_sq_join)
 
-victims_sq_demo <- victims_sq %>%
+victims_sq_demo <- victims_sq_join %>%
   select(victim,sq,victim_age,victim_race,victim_gender,URL.of.image.of.victim,
-         doi,Agency.responsible.for.death,Cause.of.death,
+         doi.x,Agency.responsible.for.death,Cause.of.death,
          A.brief.description.of.the.circumstances.surrounding.the.death,
          Official.disposition.of.death..justified.or.other.,Criminal.Charges.,
          Symptoms.of.mental.illness.,Armed.Unarmed.Status,
          Alleged.Weapon..Source..WaPo.and.Review.of.Cases.Not.Included.in.WaPo.Database.,
          Alleged.Threat.Level..Source..WaPo.,Fleeing..Source..WaPo.,Body.Camera..Source..WaPo.,
-         Zip,City_y,State_y,Latitude,Longitude)%>%
+         Zip,City_y,State_y,Latitude,Longitude,Link.to.news.article.or.photo.of.official.document)%>%
   unique()
 
 head(victims_sq_demo)
 
 write.csv(victims_sq_demo,"data\\victims_sq_demo.csv", row.names = FALSE)
-
-write.csv(victims_sq_demo_unique,"data/victims_sq_demo_unique.csv", row.names = FALSE)
 
 ```
 

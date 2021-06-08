@@ -3,12 +3,11 @@ library(shiny)
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
 
-    # Application title
+    theme = bslib::bs_theme(bootswatch = "darkly"),
     titlePanel("Say Their Names"),
 
-    # Sidebar with a slider input for number of bins
     sidebarLayout(
-        sidebarPanel(
+        sidebarPanel(width = 3,
             dateRangeInput("daterange",
                         "Select Date Range",
                         start = "2013-01-01",
@@ -33,14 +32,18 @@ shinyUI(fluidPage(
                                         ,"Vehicle"))
             
         ),
-        
-            
-        
-
-        
+    
         mainPanel(
-            leafletOutput("map"),
-            plotlyOutput("plot")
+            leafletOutput("map"))),
+        
+        navlistPanel(
+            "Visualizations of Tracking Quotient",
+            tabPanel( title = "Log Plot",
+                plotlyOutput("plotlog")),
+            tabPanel( title = "Regular Plot",
+                plotlyOutput("plot")),
+            tabPanel( title = "Histogram",
+                plotlyOutput("hist"))
         )
-    )
+    
 ))
