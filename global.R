@@ -8,6 +8,7 @@ library(ggiraph)
 library(RColorBrewer)
 library(leaflet)
 library(lubridate)
+library(dplyr)
 
 victims_sq_demo <- read.csv('data/victims_sq_demo.csv')
 

@@ -83,11 +83,11 @@ victims_article_freq <- read.csv("data/victims_article_freq.csv")
 
 ```{r}
 victims_sq <- victims_article_freq %>%
-  group_by(victim,doi,freq) %>%
-  summarize(weight_sum = sum(weight)) %>%
-  select (victim,freq,weight_sum,doi) %>%
+  group_by(victim,doi) %>%
+  summarize(weight_sum = sum(log(weight))) %>%
+  select (victim,weight_sum,doi) %>%
   ungroup() %>%
-  mutate(sq = weight_sum * freq)
+  mutate(sq = weight_sum)
 
 victims_sq
   
