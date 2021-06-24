@@ -21,12 +21,12 @@ shinyServer(function(input, output) {
             addProviderTiles("CartoDB.Positron", 
                              options = providerTileOptions(noWrap = TRUE))%>%
             addMarkers(lng = ~Longitude, lat = ~Latitude,
-                       popup = paste ("<img src = ", reactiveMain()$URL.of.image.of.victim, " width = 300>", "<br>",
-                                      "Name: ", reactiveMain()$victim, "<br>",
-                                      "Age: ", reactiveMain()$victim_age, "<br>",
+                       popup = paste ("<img src = ", reactiveMain()$URL.of.image.of.victim, " width = 200>", "<br>",
+                                      "Name: ", reactiveMain()$victim, "&emsp;",
+                                      "Age: ", reactiveMain()$victim_age, "&emsp;",
                                       "Gender: ",reactiveMain()$victim_gender,"<br>",
-                                      "Race: ",reactiveMain()$victim_race,"<br>",
-                                      "DOI: ",reactiveMain()$doi,"<br>",
+                                      "Race: ",reactiveMain()$victim_race,"&emsp;",
+                                      "DOI: ",reactiveMain()$doi,"&emsp;",
                                       "TQ: ",reactiveMain()$sq,"<br>",
                                       '<a href =', reactiveMain()$link, '>Additional Reading</a>',"<br>",
                                       reactiveMain()$description)
@@ -50,10 +50,10 @@ shinyServer(function(input, output) {
             need(input$armed, 'Check at least one armed status'))
 
         plot <- ggplot(reactiveMain(), aes(x = doi,y=sq))+
-            geom_point(size=1.25)+
+            geom_point(size=1.25,aes(text = victim))+
             xlab("Date")+
-            ylab("SQ")+
-            labs(color = "SQ")+
+            ylab("TQ")+
+            labs(color = "TQ")+
             scale_x_date(date_labels = "%m-%Y")+
             geom_hline(yintercept=mean(reactiveMain()$sq), linetype='dotted', col = 'red')
     })
@@ -82,10 +82,10 @@ shinyServer(function(input, output) {
         plotlog <- ggplot(reactiveMain(), aes(x = doi,y=log10(sq)))+
             geom_point(size=1.25)+
             xlab("Date")+
-            ylab("SQ")+
-            labs(color = "SQ")+
+            ylab("TQ")+
+            labs(color = "Mean/nTraction/Quotient")+
             scale_x_date(date_labels = "%m-%Y")+
-            geom_hline(yintercept=mean(reactiveMain()$sq), linetype='dotted', col = 'red')
+            geom_hline(yintercept=mean(log(reactiveMain()$sq)), linetype='dotted', col = 'red')
         
     })
 })

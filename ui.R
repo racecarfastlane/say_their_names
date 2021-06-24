@@ -10,7 +10,7 @@ shinyUI(fluidPage(
         sidebarPanel(width = 3,
             dateRangeInput("daterange",
                         "Select Date Range",
-                        start = "2013-01-01",
+                        start = "2020-01-01",
                         min = "2013-01-01",
                         end = "2021-05-15",
                         max = "2021-05-15",
@@ -34,16 +34,15 @@ shinyUI(fluidPage(
         ),
     
         mainPanel(
+            h4("Traction Quotient", align = "left"),
+            h5("The Traction Quotient is a factor that determines how much an event is in the media zeitgeist.", align = "left"),   
+            h5("It measures the sum of the log of days each article’s publishing date is from the event.", align = "left"),
+            h5("",align = "left"),
+            h5("TQ = (log(ad1-doi+1)+log(ad2-doi+1)...)",align = "left"),
             leafletOutput("map"))),
+            fluidRow(
+                column(8,align = "center",offset = 3,
+                plotlyOutput("plot")))
         
-        navlistPanel(
-            "Visualizations of Tracking Quotient",
-            tabPanel( title = "Log Plot",
-                plotlyOutput("plotlog")),
-            tabPanel( title = "Regular Plot",
-                plotlyOutput("plot")),
-            tabPanel( title = "Histogram",
-                plotlyOutput("hist"))
-        )
     
 ))
